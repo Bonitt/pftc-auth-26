@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using pftc_auth.DataAccess;
 using System.Security.Claims;
 
 
@@ -11,7 +12,7 @@ namespace pftc_auth
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", builder.Configuration["Authentication:Google:Credentials"]);
 
             builder.Services.AddAuthentication(options =>
             {
@@ -37,10 +38,11 @@ namespace pftc_auth
             builder.Services.AddAuthorization();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddScoped<FirestoreRepository>();
+
             var app = builder.Build();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -54,6 +56,9 @@ namespace pftc_auth
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
  
             app.MapControllerRoute(
                 name: "default",
