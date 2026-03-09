@@ -103,13 +103,7 @@ namespace pftc_auth.DataAccess
 
             try
             {
-                Query allPostsQuery = _db.Collection("posts").WhereEqualTo("postId", PostId);
-                QuerySnapshot querySnapshot = await allPostsQuery.GetSnapshotAsync();
-
-                if (querySnapshot.Documents.Count == 0)
-                    throw new KeyNotFoundException($"Post with id {PostId} not found");
-
-                DocumentSnapshot documentSnapshot = querySnapshot.Documents[0];
+                SocialMediaPost post = await _repo.GetPost
 
                 await documentSnapshot.Reference.DeleteAsync();
 

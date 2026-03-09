@@ -27,7 +27,8 @@ namespace pftc_auth.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreatePost(SocialMediaPost p) {
+        public async Task<IActionResult> CreatePost(SocialMediaPost p)
+        {
 
 
             p.PostId = Guid.NewGuid().ToString();
@@ -38,5 +39,37 @@ namespace pftc_auth.Controllers
 
         }
 
+        //Delete
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeletePost(string postId)
+        {
+            try
+            {
+                await _repo.DeletePost(postId);
+                return RedirectToAction("Index", "Social");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, $"Failed to delete post with id {postId}");
+                return NotFound();
+            }
+        }
+        //Update
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdatePost(string postId, string postContent)
+        {
+            try
+            {
+                await _repo.UpdatePost(postId, postContent);
+                return RedirectToAction("Index", "Social");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, $"Failed to update post with id {postId}");
+                return NotFound();
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using pftc_auth.DataAccess;
+using pftc_auth.Interfaces;
+using pftc_auth.Services;
 using System.Security.Claims;
 
 
@@ -39,6 +41,7 @@ namespace pftc_auth
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<FirestoreRepository>();
+            builder.Services.AddScoped<IBucketStorageService, BucketStorageService>();
 
             var app = builder.Build();
 
